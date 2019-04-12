@@ -25,7 +25,7 @@ import static android.content.Context.KEYGUARD_SERVICE;
 
 //TODO make builder pattern
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class HardawareFingerScannerHandler {
+public class HardwareFingerScannerHandler {
 
     private Context context;
     private Cipher cipher;
@@ -34,10 +34,10 @@ public class HardawareFingerScannerHandler {
     private IonHardwareScannerResult listener;
 
     public static void create(Context context, Cipher cipher, IonHardwareScannerResult listener){
-        new HardawareFingerScannerHandler(context, cipher, listener).handle();
+        new HardwareFingerScannerHandler(context, cipher, listener).handle();
     }
 
-    private HardawareFingerScannerHandler(Context context, Cipher cipher, IonHardwareScannerResult listener) {
+    private HardwareFingerScannerHandler(Context context, Cipher cipher, IonHardwareScannerResult listener) {
         this.context = context;
         this.cipher = cipher;
         this.listener = listener;
@@ -49,15 +49,18 @@ public class HardawareFingerScannerHandler {
         switch (checkSensorState(this.context)){
 
             case NOT_SUPPORTED:
+//                нет встроенного сканера
                 Toast.makeText(context, "Your device doesn't support fingerprint authentication", Toast.LENGTH_LONG).show();
                 break;
             case NO_FINGERPRINTS:
+//                нет откатанных пальцев (возможно отправить в настройки, объяснить как)
                 Toast.makeText(
                         context,
                         "No fingerprint configured. Please register at least one fingerprint in your device's Settings",
                         Toast.LENGTH_LONG).show();
                 break;
             case NOT_BLOCKED:
+//                обязательно должен быть включен режим Lock Screen  (пароль или паттерн, возможно с отпечатком)
                 Toast.makeText(
                         context,
                         "Please enable lock screen security in your device's Settings",
@@ -67,7 +70,7 @@ public class HardawareFingerScannerHandler {
                 Toast.makeText(context, "Please enable the fingerprint permission", Toast.LENGTH_LONG).show();
                 break;
             case READY:
-
+//                готово
 //                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                     //api 23-27
 
@@ -126,7 +129,6 @@ public class HardawareFingerScannerHandler {
                                     Toast.makeText(context, "onAuthenticationFailed", Toast.LENGTH_LONG).show();
                                 }
                             }
-
                             ,
                             null);
 
@@ -134,7 +136,6 @@ public class HardawareFingerScannerHandler {
 //                    //api higher 28
 //
 ////                    Biometric smth
-//
 //
 //                }
 
