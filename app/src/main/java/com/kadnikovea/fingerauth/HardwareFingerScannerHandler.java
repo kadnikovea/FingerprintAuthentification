@@ -28,18 +28,18 @@ import static android.content.Context.KEYGUARD_SERVICE;
 public class HardwareFingerScannerHandler {
 
     private Context context;
-    private Cipher cipher;
+    private FingerprintManager.CryptoObject cryptoObject;
     private FingerprintManager fingerprintManager;
     private CancellationSignal cancellationSignal;
     private IonHardwareScannerResult listener;
 
-    public static void create(Context context, Cipher cipher, IonHardwareScannerResult listener){
-        new HardwareFingerScannerHandler(context, cipher, listener).handle();
+    public static void create(Context context, FingerprintManager.CryptoObject cryptoObject, IonHardwareScannerResult listener){
+        new HardwareFingerScannerHandler(context, cryptoObject, listener).handle();
     }
 
-    private HardwareFingerScannerHandler(Context context, Cipher cipher, IonHardwareScannerResult listener) {
+    private HardwareFingerScannerHandler(Context context, FingerprintManager.CryptoObject cryptoObject, IonHardwareScannerResult listener) {
         this.context = context;
-        this.cipher = cipher;
+        this.cryptoObject = cryptoObject;
         this.listener = listener;
         this.fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
     }
@@ -96,7 +96,7 @@ public class HardwareFingerScannerHandler {
 
                     cancellationSignal = new CancellationSignal();
 
-                    fingerprintManager.authenticate(new FingerprintManager.CryptoObject(cipher),
+                    fingerprintManager.authenticate(cryptoObject,
                             cancellationSignal,
                             0,
                             new FingerprintManager.AuthenticationCallback() {
@@ -159,7 +159,7 @@ public class HardwareFingerScannerHandler {
 
     private void cleanHandler() {
        context = null;
-       cipher = null;
+       cryptoObject = null;
        fingerprintManager = null;
        cancellationSignal = null;
        listener = null;

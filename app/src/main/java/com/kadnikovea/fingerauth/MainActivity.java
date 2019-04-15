@@ -1,4 +1,5 @@
 package com.kadnikovea.fingerauth;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                HardwareFingerScannerHandler.create(this, cipher, () -> {
+                HardwareFingerScannerHandler.create(this, new FingerprintManager.CryptoObject(cipher), () -> {
                     try {
 
                         encription = cipher.doFinal(textToEncript.getBytes("UTF-8"));
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                HardwareFingerScannerHandler.create(this, cipher, () ->{
+                HardwareFingerScannerHandler.create(this, new FingerprintManager.CryptoObject(cipher), () ->{
                     try {
                         final byte[] decodeData = cipher.doFinal(encription);
                         final String decryptedString = new String(decodeData, "UTF-8");
